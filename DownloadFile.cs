@@ -12,6 +12,7 @@ namespace Client
     public class DownloadFile
     {
         string m_Url, m_SavePath, m_FileName;
+        string m_StoreLocation, m_Name;
         WebClient m_Client;
 
         public DownloadFile(string url, string savePath, string fileName)
@@ -71,6 +72,16 @@ namespace Client
         public string FolderPath
         {
             get { return m_SavePath; }
+        }
+        public string StoreLocation
+        {
+            get { return m_StoreLocation; }
+            set { m_StoreLocation = value; }
+        }
+        public string Name
+        {
+            get { return m_Name; }
+            set { m_Name = value; }
         }
         public static void CopyFolder(string sourceFolder, string destFolder)
         {

@@ -77,24 +77,34 @@ namespace Client
                     return;
                 }
             }
-            
+
+            DialogResult dialogResult;
             switch (LblTitle.Text.ToLower())
             {
                 case "minecraft modded":
-                    DialogResult dialogResult = MessageBox.Show("Do you have minecraft 1.18.1 installed? YOUR MOD FOLDER WILL BE DELETED!", "Minecraft modded install", MessageBoxButtons.YesNo);
+                    dialogResult = MessageBox.Show("Do you have minecraft 1.18.1 installed? YOUR MOD FOLDER WILL BE DELETED!", "Minecraft modded install", MessageBoxButtons.YesNo);
                     if (dialogResult == DialogResult.Yes)
                     {
                         btnInstall.Enabled = false;
                         gameDownload = new DownloadFile("https://www.dropbox.com/s/n89zmy9be0737m3/Minecraft%20modded.zip?dl=1", "C:/temp/Downloads/", "minecraft.zip");
-                    }
-                    else if (dialogResult == DialogResult.No)
-                    {
-                        //do something else
+                        gameDownload.Name = LblTitle.Text;
                     }
                     break;
                 case "fragile frogs":
+                    if (Directory.Exists(Constants.fragileFrogsLocation))
+                    {
+                        dialogResult = MessageBox.Show("You already have fragile frogs. This will overwrite the current version.", "Fragile frogs install", MessageBoxButtons.YesNo);
+                        if (dialogResult != DialogResult.Yes)
+                        {
+                            return;
+                        }
+                        Directory.Delete(Environment.ExpandEnvironmentVariables(Constants.fragileFrogsLocation), true);
+                    }
                     btnInstall.Enabled = false;
                     gameDownload = new DownloadFile("https://www.dropbox.com/s/3jqijdibu842cbk/MotherFroggers.zip?dl=1", "C:/temp/Downloads/", "fragilefrogs.zip");
+                    gameDownload.StoreLocation = Constants.fragileFrogsLocation;
+                    gameDownload.Name = LblTitle.Text;
+                    Directory.CreateDirectory(gameDownload.StoreLocation);
                     break;
             }
         }
@@ -103,13 +113,12 @@ namespace Client
         {
             if (gameDownload != null)
             {
-                progbarInstall.Maximum = (int)(gameDownload.TotalMegaBytes*1000);
-                progbarInstall.Value = (int)(gameDownload.ReceivedMegaBytes*1000);
+
                 if (gameDownload.Completed)
                 {
-                    switch (gameDownload.FullPath.ToLower())
+                    switch (gameDownload.Name.ToLower())
                     {
-                        case "minecraft.zip":
+                        case "minecraft modded":
                             if (File.Exists(gameDownload.FullPath))
                             {
                                 ZipFile.ExtractToDirectory(gameDownload.FullPath, gameDownload.FolderPath);
@@ -129,10 +138,21 @@ namespace Client
                                 DownloadFile.CopyFolder($"{gameDownload.FolderPath}Mods/", Environment.ExpandEnvironmentVariables("%AppData%\\.minecraft/mods"));
                             }
                             break;
-                        case "fragilefrogs.zip":
-
+                        case "fragile frogs":
+                            if (File.Exists(gameDownload.FullPath))
+                            {
+                                ZipFile.ExtractToDirectory(gameDownload.FullPath, gameDownload.StoreLocation);
+                                ReEnableDownload();
+                                Process.Start($@"{gameDownload.StoreLocation}/");
+                            }
                             break;
                     }
+                }
+                else
+                {
+                    progbarInstall.Maximum = (int)(gameDownload.TotalMegaBytes * 1000);
+                    progbarInstall.Value = (int)(gameDownload.ReceivedMegaBytes * 1000);
+                    LblSpeed.Text = $"{Math.Round(gameDownload.ReceivedMegaBytes, 2)}MB/{Math.Round(gameDownload.TotalMegaBytes, 2)}MB";
                 }
             }
         }
@@ -140,8 +160,7 @@ namespace Client
         {
             gameDownload.Completed = false;
             btnInstall.Enabled = true;
+            LblSpeed.Text = string.Empty;    
         }
-
-        
     }
 }

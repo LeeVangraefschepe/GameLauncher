@@ -37,6 +37,7 @@ namespace Client
             this.LblProgress = new System.Windows.Forms.Label();
             this.tick = new System.Windows.Forms.Timer(this.components);
             this.BtnFragileFrogs = new System.Windows.Forms.Button();
+            this.LblSpeed = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // BtnMinecraftModded
@@ -110,6 +111,17 @@ namespace Client
             this.BtnFragileFrogs.UseVisualStyleBackColor = false;
             this.BtnFragileFrogs.Click += new System.EventHandler(this.BtnFragileFrogs_Click);
             // 
+            // LblSpeed
+            // 
+            this.LblSpeed.AutoSize = true;
+            this.LblSpeed.BackColor = System.Drawing.Color.Transparent;
+            this.LblSpeed.Font = new System.Drawing.Font("Microsoft Sans Serif", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LblSpeed.ForeColor = System.Drawing.SystemColors.ButtonFace;
+            this.LblSpeed.Location = new System.Drawing.Point(354, 565);
+            this.LblSpeed.Name = "LblSpeed";
+            this.LblSpeed.Size = new System.Drawing.Size(0, 22);
+            this.LblSpeed.TabIndex = 7;
+            // 
             // Client
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -117,6 +129,7 @@ namespace Client
             this.BackgroundImage = global::Client.Properties.Resources.ClientClient;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(1280, 720);
+            this.Controls.Add(this.LblSpeed);
             this.Controls.Add(this.BtnFragileFrogs);
             this.Controls.Add(this.LblProgress);
             this.Controls.Add(this.progbarInstall);
@@ -128,6 +141,7 @@ namespace Client
             this.Text = "Client";
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Client_MouseDown);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -140,5 +154,6 @@ namespace Client
         private System.Windows.Forms.Label LblProgress;
         private System.Windows.Forms.Timer tick;
         private System.Windows.Forms.Button BtnFragileFrogs;
+        private System.Windows.Forms.Label LblSpeed;
     }
 }
